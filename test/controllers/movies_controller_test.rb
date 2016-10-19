@@ -13,10 +13,10 @@ class MoviesControllerTest < ActionController::TestCase
 
   test "Should have flash notice for showing things not in DB" do
     # 1st delete it so it's not in the DB
-    @id = items(:braveheart).id
-    delete :destroy, {id: @id}
+    id = items(:braveheart).id
+    delete :destroy, {id: id}
     # 2nd Then try to show the resource
-    get :show, id: @id
+    get :show, id: id
     # You should get redirected and a message that it doesn't exist
     assert_response :redirect
     assert_equal "That item does not exist.", flash[:notice]

@@ -1,8 +1,7 @@
 class BooksController < ApplicationController
   def index
-    Item.order(rank: :desc)
     @all_items = Item.order(rank: :desc).where(kind: "Book")
-    @media = "Book"
+    @media = BOOK_MEDIA
     @link_path = "/books/"
     @path = new_book_path
   end
@@ -11,13 +10,13 @@ class BooksController < ApplicationController
     @item = Item.find_by(id: params[:id].to_i)
 
     if @item == nil # if the item does not exist
-      flash[:notice] = "That item does not exist."
+      flash[:notice] = EXIST_ERROR
       redirect_to action: "index"
     else
       @upvote_path = books_upvote_path(@item.id)
       @edit_path = edit_book_path(@item.id)
       @delete_path = book_path(@item.id)
-      @media = "Albums"
+      @media = ALBUM_MEDIA.pluralize
       @view_media_path = books_path
     end
 
@@ -26,34 +25,33 @@ class BooksController < ApplicationController
   def new
     @item = Item.new
     @action = :create
-    @author_text = "Author"
+    @author_text = BOOK_AUTHOR
     @method = :post
   end
 
   def create
-    @params = params
     @item = Item.new(post_params(params))
     @item.rank = 0
-    @item.kind = "Book"
+    @item.kind = BOOK_MEDIA
     if @item.save
       # success
       redirect_to books_path
     else
-      flash[:notice] = "Cannot save #{@item.errors.keys} - #{@item.errors.values}"
+      render :new
     end
   end
 
   def edit
     @item = Item.find_by(id: params[:id].to_i)
     if @item == nil # if the item does not exist
-      flash[:notice] = "That item does not exist."
+      flash[:notice] = EXIST_ERROR
       redirect_to action: "index"
-    elsif @item.kind != "Book"
-      flash[:notice] = "That item is not a book."
+    elsif @item.kind != BOOK_MEDIA
+      flash[:notice] = type_error(BOOK_MEDIA)
       redirect_to action: "index"
     end
     @action = :update
-    @author_text = "Author"
+    @author_text = BOOK_AUTHOR
     @method = :put
 
   end
@@ -61,14 +59,12 @@ class BooksController < ApplicationController
   def update
     @item = Item.find_by(id: params[:id].to_i)
     if @item == nil # if the item does not exist
-      redirect_to :index, flash: {notice: "That item does not exist."}
-    elsif @item.kind != "Book"
-      redirect_to :index, flash: {notice: "That item is not a book."}
+      redirect_to :index, flash: {notice: EXIST_ERROR }
+    elsif @item.kind != BOOK_MEDIA
+      redirect_to :index, flash: { notice: type_error(BOOK_MEDIA) }
     end
-    @item.name = post_params(params)[:name]
-    @item.author = post_params(params)[:author]
-    @item.description = post_params(params)[:description]
-    if @item.save
+
+    if @item.update_attributes(post_params(params))
       redirect_to book_path(@item.id), flash: {notice: "Item saved."}
     else
       redirect_to edit_book_path(@item.id), flash: {notice: "Item could not be saved."}
@@ -79,13 +75,13 @@ class BooksController < ApplicationController
   def destroy
     @item = Item.find_by(id: params[:id].to_i)
     if @item == nil # if the item does not exist
-      flash[:notice] = 'That item does not exist.'
+      flash[:notice] = EXIST_ERROR
       redirect_to :index
-    elsif @item.kind != "Book"
-      flash[:notice] = 'That item is not a book.'
+    elsif @item.kind != BOOK_MEDIA
+      flash[:notice] = type_error(BOOK_MEDIA)
       redirect_to :index
     elsif @item.destroy
-      flash[:notice] = "Sucessfully deleted"
+      flash[:notice] = DELETE_MSG
       redirect_to :action=> :index, status: 303
     else
       flash[:notice] = "Unable to delete the book"
@@ -96,7 +92,7 @@ class BooksController < ApplicationController
   def upvote
     @item = Item.find_by(id: params[:id].to_i)
     if @item == nil # if the item does not exist
-      flash[:notice] = 'That item does not exist.'
+      flash[:notice] = EXIST_ERROR
       redirect_to :index
     else
       @item.upvote

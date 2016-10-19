@@ -11,12 +11,17 @@ class AlbumsControllerTest < ActionController::TestCase
     assert_response :success
   end
 
+  test "should redirect on show without valid ID" do
+    get :show, id: 99999
+    assert_redirected_to albums_path
+  end
+
   test "Should have flash notice for showing things not in DB" do
     # 1st delete it so it's not in the DB
-    @id = items(:album_sample).id
-    delete :destroy, {id: @id}
+    id = items(:album_sample).id
+    delete :destroy, {id: id}
     # 2nd Then try to show the resource
-    get :show, id: @id
+    get :show, id: id
     # You should get redirected and a message that it doesn't exist
     assert_response :redirect
     assert_equal "That item does not exist.", flash[:notice]
@@ -30,6 +35,11 @@ class AlbumsControllerTest < ActionController::TestCase
   test "Should be able to create a new Album" do
     post :create, {item: {name: "Californication", author: "Lucas", description: "Something"}}
     assert_response :redirect
+  end
+
+  test "Should show new form if create fails" do
+    post :create, {item: {description: "Bad"}}
+    assert_template :new
   end
 
   test "Newly created Albums should have the right fields and type" do
@@ -53,6 +63,11 @@ class AlbumsControllerTest < ActionController::TestCase
     assert_response :success
   end
 
+  test "should redirect when attempting edit on an item that doesn't exist" do
+    get :edit, id: 999999
+    assert_response :redirect
+  end
+
   test "Trying to edit an item deleted or not there should be redirected" do
       # 1st delete the item
     delete :destroy, id: items(:album_sample).id
@@ -74,6 +89,12 @@ class AlbumsControllerTest < ActionController::TestCase
   test "Should be able to call destroy" do
     delete :destroy, {id: items(:album_sample).id}
     assert_response :redirect
+  end
+
+  test "Should redirect and error when destroying an item that doesn't exist" do
+    delete :destroy, id: 99999
+    assert_response :redirect
+    assert_equal "That item does not exist.", flash[:notice]
   end
 
   test "Deleting an item should reduce the total number." do
