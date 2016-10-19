@@ -27,9 +27,7 @@ class MoviesController < ApplicationController
 
   def new
     @item = Item.new
-    @action = :create
     @author_text = MOVIE_AUTHOR
-    @method = :post
   end
 
   def create
@@ -53,9 +51,7 @@ class MoviesController < ApplicationController
       flash[:notice] = type_error(MOVIE_MEDIA)
       redirect_to action: "index"
     else
-      @action = :update
       @author_text = MOVIE_AUTHOR
-      @method = :put
     end
 
 

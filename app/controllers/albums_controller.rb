@@ -27,9 +27,7 @@ class AlbumsController < ApplicationController
 
   def new
     @item = Item.new
-    @action = :create
     @author_text = ALBUM_AUTHOR
-    @method = :post
   end
 
   def create
@@ -50,10 +48,8 @@ class AlbumsController < ApplicationController
       flash[:notice] = EXIST_ERROR
       redirect_to action: "index"
     end
-    @action = :update
-    @author_text = ALBUM_AUTHOR
-    @method = :put
 
+    @author_text = ALBUM_AUTHOR
   end
 
   def update

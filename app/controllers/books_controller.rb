@@ -24,9 +24,7 @@ class BooksController < ApplicationController
 
   def new
     @item = Item.new
-    @action = :create
     @author_text = BOOK_AUTHOR
-    @method = :post
   end
 
   def create
@@ -50,10 +48,7 @@ class BooksController < ApplicationController
       flash[:notice] = type_error(BOOK_MEDIA)
       redirect_to action: "index"
     end
-    @action = :update
     @author_text = BOOK_AUTHOR
-    @method = :put
-
   end
 
   def update

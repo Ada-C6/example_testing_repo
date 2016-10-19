@@ -4,12 +4,15 @@
   <% end %>
 <% end %>
 
-<%= form_for @item, url: {action: @action, method: @method} do |f| %>
+<%= form_for @item, url: {action: action, method: method} do |f| %>
   <%= f.label :name, "Name", {class: "form-control"} %>
   <%= f.text_field :name, {class: "form-control"} %>
+
   <%= f.label :author, @author_text, {class: "form-control"} %>
   <%= f.text_field :author, {class: "form-control"} %>
+
   <%= f.label :description, {class: "form-control"} %>
   <%= f.text_area :description, {class: "form-control"} %>
+
   <%= f.submit "Save" %>
 <% end %>
