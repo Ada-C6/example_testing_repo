@@ -70,7 +70,6 @@ class MoviesController < ApplicationController
     else
       redirect_to edit_book_path(@item.id), flash: {notice: "Item could not be saved."}
     end
-
   end
 
   def destroy

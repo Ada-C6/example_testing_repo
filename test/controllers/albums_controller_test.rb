@@ -20,11 +20,13 @@ class AlbumsControllerTest < ActionController::TestCase
     # 1st delete it so it's not in the DB
     id = items(:album_sample).id
     delete :destroy, {id: id}
+
     # 2nd Then try to show the resource
     get :show, id: id
+
     # You should get redirected and a message that it doesn't exist
     assert_response :redirect
-    assert_equal "That item does not exist.", flash[:notice]
+    assert_equal AlbumsController::EXIST_ERROR, flash[:notice]
   end
 
   test "should get new" do
@@ -74,7 +76,7 @@ class AlbumsControllerTest < ActionController::TestCase
       # Try to edit the item that's not there.
     get :edit, id: items(:album_sample).id
     assert_response :redirect
-    assert_equal "That item does not exist.", flash[:notice]
+    assert_equal AlbumsController::EXIST_ERROR, flash[:notice]
   end
 
   test "An updated Album should have the right fields" do
@@ -94,7 +96,7 @@ class AlbumsControllerTest < ActionController::TestCase
   test "Should redirect and error when destroying an item that doesn't exist" do
     delete :destroy, id: 99999
     assert_response :redirect
-    assert_equal "That item does not exist.", flash[:notice]
+    assert_equal AlbumsController::EXIST_ERROR, flash[:notice]
   end
 
   test "Deleting an item should reduce the total number." do

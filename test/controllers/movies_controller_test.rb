@@ -19,7 +19,7 @@ class MoviesControllerTest < ActionController::TestCase
     get :show, id: id
     # You should get redirected and a message that it doesn't exist
     assert_response :redirect
-    assert_equal "That item does not exist.", flash[:notice]
+    assert_equal MoviesController::EXIST_ERROR, flash[:notice]
   end
 
   test "should get new" do
@@ -59,7 +59,7 @@ class MoviesControllerTest < ActionController::TestCase
       # Try to edit the item that's not there.
     get :edit, id: items(:braveheart).id
     assert_response :redirect
-    assert_equal "That item does not exist.", flash[:notice]
+    assert_equal MoviesController::EXIST_ERROR, flash[:notice]
   end
 
   test "An updated movie should have the right fields" do

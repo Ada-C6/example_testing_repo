@@ -63,7 +63,6 @@ class AlbumsController < ApplicationController
     else
       redirect_to edit_album_path(@item.id), flash: {notice: "Item could not be saved."}
     end
-
   end
 
   def destroy
