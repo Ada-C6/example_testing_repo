@@ -1,9 +1,7 @@
 class BooksController < ApplicationController
   def index
     @all_items = Item.order(rank: :desc).where(kind: "Book")
-    @media = BOOK_MEDIA
-    @link_path = "/books/"
-    @path = new_book_path
+    @media = Item::BOOK_MEDIA
   end
 
   def show
@@ -12,25 +10,18 @@ class BooksController < ApplicationController
     if @item == nil # if the item does not exist
       flash[:notice] = EXIST_ERROR
       redirect_to action: "index"
-    else
-      @upvote_path = books_upvote_path(@item.id)
-      @edit_path = edit_book_path(@item.id)
-      @delete_path = book_path(@item.id)
-      @media = ALBUM_MEDIA.pluralize
-      @view_media_path = books_path
     end
-
   end
 
   def new
     @item = Item.new
-    @author_text = BOOK_AUTHOR
+    @author_text = Item::BOOK_AUTHOR
   end
 
   def create
     @item = Item.new(post_params(params))
     @item.rank = 0
-    @item.kind = BOOK_MEDIA
+    @item.kind = Item::BOOK_MEDIA
     if @item.save
       # success
       redirect_to books_path
@@ -44,19 +35,19 @@ class BooksController < ApplicationController
     if @item == nil # if the item does not exist
       flash[:notice] = EXIST_ERROR
       redirect_to action: "index"
-    elsif @item.kind != BOOK_MEDIA
-      flash[:notice] = type_error(BOOK_MEDIA)
+    elsif @item.kind != Item::BOOK_MEDIA
+      flash[:notice] = type_error(Item::BOOK_MEDIA)
       redirect_to action: "index"
     end
-    @author_text = BOOK_AUTHOR
+    @author_text = Item::BOOK_AUTHOR
   end
 
   def update
     @item = Item.find_by(id: params[:id].to_i)
     if @item == nil # if the item does not exist
       redirect_to :index, flash: {notice: EXIST_ERROR }
-    elsif @item.kind != BOOK_MEDIA
-      redirect_to :index, flash: { notice: type_error(BOOK_MEDIA) }
+    elsif @item.kind != Item::BOOK_MEDIA
+      redirect_to :index, flash: { notice: type_error(Item::BOOK_MEDIA) }
     end
 
     if @item.update_attributes(post_params(params))
@@ -71,8 +62,8 @@ class BooksController < ApplicationController
     if @item == nil # if the item does not exist
       flash[:notice] = EXIST_ERROR
       redirect_to :index
-    elsif @item.kind != BOOK_MEDIA
-      flash[:notice] = type_error(BOOK_MEDIA)
+    elsif @item.kind != Item::BOOK_MEDIA
+      flash[:notice] = type_error(Item::BOOK_MEDIA)
       redirect_to :index
     elsif @item.destroy
       flash[:notice] = DELETE_MSG

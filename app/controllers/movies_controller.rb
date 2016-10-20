@@ -1,10 +1,7 @@
 class MoviesController < ApplicationController
   def index
-    @all_items = Item.order(rank: :desc).where(kind: MOVIE_MEDIA)
-    @media = MOVIE_MEDIA
-    @link_path = "/movies/"
-
-    @path = new_movie_path
+    @all_items = Item.order(rank: :desc).where(kind: Item::MOVIE_MEDIA)
+    @media = Item::MOVIE_MEDIA
   end
 
   def show
@@ -13,27 +10,21 @@ class MoviesController < ApplicationController
     if @item == nil # if the item does not exist
       flash[:notice] = EXIST_ERROR
       redirect_to action: "index"
-    elsif @item.kind != MOVIE_MEDIA
-      flash[:notice] = type_error(MOVIE_MEDIA)
+    elsif @item.kind != Item::MOVIE_MEDIA
+      flash[:notice] = type_error(Item::MOVIE_MEDIA)
       redirect_to action: "index"
-    else
-      @upvote_path = movies_upvote_path(@item.id)
-      @edit_path = edit_movie_path(@item.id)
-      @delete_path = movie_path(@item.id)
-      @media = MOVIE_MEDIA.pluralize
-      @view_media_path = movies_path
     end
   end
 
   def new
     @item = Item.new
-    @author_text = MOVIE_AUTHOR
+    @author_text = Item::MOVIE_AUTHOR
   end
 
   def create
     @item = Item.new(post_params(params))
     @item.rank = 0
-    @item.kind = MOVIE_MEDIA
+    @item.kind = Item::MOVIE_MEDIA
     if @item.save
       # success
       redirect_to movies_path
@@ -47,11 +38,11 @@ class MoviesController < ApplicationController
     if @item == nil # if the item does not exist
       flash[:notice] = EXIST_ERROR
       redirect_to action: "index"
-    elsif @item.kind != MOVIE_MEDIA
-      flash[:notice] = type_error(MOVIE_MEDIA)
+    elsif @item.kind != Item::MOVIE_MEDIA
+      flash[:notice] = type_error(Item::MOVIE_MEDIA)
       redirect_to action: "index"
     else
-      @author_text = MOVIE_AUTHOR
+      @author_text = Item::MOVIE_AUTHOR
     end
 
 
@@ -61,8 +52,8 @@ class MoviesController < ApplicationController
     @item = Item.find_by(id: params[:id].to_i)
     if @item == nil # if the item does not exist
       redirect_to :index, flash: {notice: EXIST_ERROR}
-    elsif @item.kind != MOVIE_MEDIA
-      redirect_to :index, flash: { notice: type_error(MOVIE_MEDIA) }
+    elsif @item.kind != Item::MOVIE_MEDIA
+      redirect_to :index, flash: { notice: type_error(Item::MOVIE_MEDIA) }
     end
 
     if @item.update_attributes(post_params(params))
@@ -77,8 +68,8 @@ class MoviesController < ApplicationController
     if @item == nil # if the item does not exist
       flash[:notice] = EXIST_ERROR
       redirect_to :index
-    elsif @item.kind != MOVIE_MEDIA
-      flash[:notice] = type_error(MOVIE_MEDIA)
+    elsif @item.kind != Item::MOVIE_MEDIA
+      flash[:notice] = type_error(Item::MOVIE_MEDIA)
       redirect_to :index
     elsif @item.destroy
       flash[:notice] = DELETE_MSG

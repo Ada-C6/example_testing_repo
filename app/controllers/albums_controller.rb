@@ -1,9 +1,7 @@
 class AlbumsController < ApplicationController
   def index
-    @all_items = Item.order(rank: :desc).where(kind: ALBUM_MEDIA)
-    @media = ALBUM_MEDIA
-    @link_path = "/albums/"
-    @path = new_album_path
+    @all_items = Item.order(rank: :desc).where(kind: Item::ALBUM_MEDIA)
+    @media = Item::ALBUM_MEDIA
   end
 
   def show
@@ -12,28 +10,21 @@ class AlbumsController < ApplicationController
     if @item == nil # if the item does not exist
       flash[:notice] = EXIST_ERROR
       redirect_to action: "index"
-    elsif @item.kind != ALBUM_MEDIA
-      flash[:notice] = type_error(ALBUM_MEDIA)
+    elsif @item.kind != Item::ALBUM_MEDIA
+      flash[:notice] = type_error(Item::ALBUM_MEDIA)
       redirect_to action: "index"
-    else
-      @upvote_path = albums_upvote_path(@item.id)
-      @edit_path = edit_album_path(@item.id)
-      @delete_path = album_path(@item.id)
-      @media = ALBUM_MEDIA.pluralize
-      @view_media_path = albums_path
     end
-
   end
 
   def new
     @item = Item.new
-    @author_text = ALBUM_AUTHOR
+    @author_text = Item::ALBUM_AUTHOR
   end
 
   def create
     @item = Item.new(post_params(params))
     @item.rank = 0
-    @item.kind = ALBUM_MEDIA
+    @item.kind = Item::ALBUM_MEDIA
     if @item.save
       # success
       redirect_to albums_path
@@ -49,7 +40,7 @@ class AlbumsController < ApplicationController
       redirect_to action: "index"
     end
 
-    @author_text = ALBUM_AUTHOR
+    @author_text = Item::ALBUM_AUTHOR
   end
 
   def update

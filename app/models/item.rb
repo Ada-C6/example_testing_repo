@@ -5,8 +5,16 @@ class Item < ActiveRecord::Base
 
   validate :type_must_be_limited
 
+  BOOK_MEDIA = "Book"
+  MOVIE_MEDIA = "Movie"
+  ALBUM_MEDIA = "Album"
+
+  ALBUM_AUTHOR = "Artist"
+  BOOK_AUTHOR = "Author"
+  MOVIE_AUTHOR = "Director"
+
   def type_must_be_limited
-    if kind != "Movie" && kind != "Book" && kind != "Album"
+    if ![BOOK_MEDIA, MOVIE_MEDIA, ALBUM_MEDIA].include?(kind)
       errors.add(:kind, "Must be a Book, Movie or Album")
     end
   end
@@ -21,4 +29,7 @@ class Item < ActiveRecord::Base
     return name == other.name && kind == other.kind && rank == other.rank && author == other.author && description == other.description
   end
 
+  def lower_kind
+    self.kind.downcase
+  end
 end

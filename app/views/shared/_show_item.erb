@@ -12,10 +12,11 @@
   <%     flash[:notice] = nil %>
 
 </p>
-<%= button_to "Upvote", @upvote_path, {method: :patch}  %>
-<%= link_to "Edit #{@item.name}", @edit_path, {class: "btn btn-default"} %>
-<%= link_to "Delete", @delete_path, {class: "btn btn-default red", method: "delete"} %>
-<%= link_to "View all #{@media}", @view_media_path, {class: "btn btn-default"} %>
+<%# raise %>
+<%= button_to "Upvote", polymorphic_path([:upvote, @item.lower_kind]), {method: :patch}  %>
+<%= link_to "Edit #{@item.name}", edit_polymorphic_path(@item.lower_kind), {class: "btn btn-default"} %>
+<%= link_to "Delete", polymorphic_path(@item.lower_kind), {class: "btn btn-default red", method: "delete"} %>
+<%= link_to "View all #{ @item.kind.pluralize }", polymorphic_path(@item.lower_kind.pluralize), {class: "btn btn-default"} %>
 <%= link_to "View all Media", root_path, {class: "btn btn-default"} %>
 
 <%# albums_upvote_path(item.id) %>

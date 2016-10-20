@@ -10,11 +10,12 @@
   <% @all_items.each do |item| %>
     <tr>
       <td>Ranked: <%= item.rank %></td>
-      <td><%= link_to item.name, "#{@link_path}#{item.id}" %></td>
-      <td><%= button_to "Upvote", albums_upvote_path(item.id), {method: :patch} %></td>
+      <%# raise %>
+      <td><%= link_to item.name, polymorphic_path(item.lower_kind, { id: item.id }) %></td>
+      <td><%= button_to "Upvote", polymorphic_path([:upvote, item.lower_kind], { id: item.id }), {method: :patch} %></td>
     </tr>
   <% end %>
 </tbody>
 </table>
 <%= link_to "View All Media", root_path, {class: "btn btn-default"} %>
-<%= link_to "Add a #{@media}", @path, {class: "btn btn-default"} %>
+<%= link_to "Add a #{@media}", new_polymorphic_path(@media.downcase), {class: "btn btn-default"} %>
