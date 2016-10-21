@@ -1,6 +1,21 @@
-<% if flash[:notice] %>
-  <p class="error"><%= flash[:notice] %></p>
-<% end %>
+<section>
+  <div class="row large-up-12">
+    <div class="column error">
+      <% if flash[:notice] %>
+        <p class="error"><%= flash[:notice] %></p>
+      <% end %>
+    </div>
+    <div class="column error">
+      <% if @item.errors %>
+        <% @item.errors.each do |key, err| %>
+          <p>
+            <%= "#{ key.capitalize } #{ err }" %>
+          </p>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</section>
 
 <%= form_for @item, url: {action: action, method: method} do |f| %>
   <div class="row">
