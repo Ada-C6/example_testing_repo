@@ -33,11 +33,11 @@ class ItemTest < ActiveSupport::TestCase
   test "An item can only be a Book, Movie or Album" do
     item = Item.new(name: "Something", rank: 0, kind: "TV Show")
     assert_not item.valid?
-    item.kind = "Book"
+    item.kind = Item::ALBUM_MEDIA
     assert item.valid?
-    item.kind = "Movie"
+    item.kind = Item::MOVIE_MEDIA
     assert item.valid?
-    item.kind = "Album"
+    item.kind = Item::BOOK_MEDIA
     assert item.valid?
   end
 end

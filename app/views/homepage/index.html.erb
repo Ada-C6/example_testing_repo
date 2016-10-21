@@ -1,23 +1,31 @@
 <main>
-  <section class="movies">
-    <h1>Top Movies</h1>
-    <% @movies.each do |movie| %>
-      <h2><%= link_to movie.name, item_path(movie.lower_kind ,movie.id)%></h2><small>Ranked: <%= movie.rank %> </small>
-    <% end %>
-    <p class="small-text"><%= link_to "View More Movies", items_path("movies") %> </p>
-  </section>
-  <section class="books">
-    <h1>Top Books</h1>
-    <% @books.each do |book| %>
-      <h2><%= link_to book.name, item_path(book.lower_kind, book.id) %></h2><small>Ranked: <%= book.rank %> </small>
-    <% end %>
-    <p class="small-text"><%= link_to "View More Books", items_path("books") %></p>
-  </section>
-  <section class="albums">
-    <h1>Top Albums</h1>
-    <% @albums.each do |album| %>
-      <h2><%= link_to album.name, item_path(album.lower_kind, album.id) %></h2><small>Ranked: <%= album.rank %> </small>
-    <% end %>
-    <p class="small-text"><%= link_to "View More Albums", items_path("albums") %></p>
-  </section>
+  <div class="row">
+    <div class="large-4 small-12 columns">
+      <section class="movies">
+        <h1>Top Movies</h1>
+        <% @movies.each do |movie| %>
+          <h2><%= link_to movie.name, item_path(movie.lower_kind ,movie.id)%></h2><small>Ranked: <%= movie.rank %> </small>
+        <% end %>
+        <p class="small-text"><%= link_to "View More Movies", items_path("movies") %> </p>
+      </section>
+    </div>
+    <div class="large-4 small-12 columns">
+      <section class="books">
+        <h1>Top Books</h1>
+        <% @books.each do |book| %>
+          <h2><%= link_to book.name, item_path(book.lower_kind, book.id) %></h2><small>Ranked: <%= book.rank %> </small>
+        <% end %>
+        <p class="small-text"><%= link_to "View More Books", items_path("books") %></p>
+      </section>
+    </div>
+    <div class="large-4 small-12 columns">
+      <section class="albums">
+        <h1>Top Albums</h1>
+        <% @albums.each do |album| %>
+          <h2><%= link_to album.name, item_path(album.lower_kind, album.id) %></h2><small>Ranked: <%= album.rank %> </small>
+        <% end %>
+        <p class="small-text"><%= link_to "View More Albums", items_path("albums") %></p>
+      </section>
+    </div>
+  </div>
 </main>

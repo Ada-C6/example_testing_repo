@@ -1,21 +1,31 @@
-<p class="notice"><%= flash[:notice] %></p>
-<%     flash[:notice] = nil %>
-<table class="table table-hover">
-<tbody>
-  <tr>
-    <th>Ranking</th>
-    <th>Name</th>
-    <th>Upvote</th>
-  </tr>
-  <% @all_items.each do |item| %>
-    <tr>
-      <td>Ranked: <%= item.rank %></td>
-      <%# raise %>
-      <td><%= link_to item.name, item_path(item.lower_kind, item.id) %></td>
-      <td><%= button_to "Upvote", upvote_item_path(item.lower_kind, item.id), {method: :patch} %></td>
-    </tr>
-  <% end %>
-</tbody>
-</table>
-<%= link_to "View All Media", root_path, {class: "btn btn-default"} %>
-<%= link_to "Add a #{@media}", new_item_path(@media.downcase), {class: "btn btn-default"} %>
+<div class="row">
+  <p class="notice"><%= flash[:notice] %></p>
+  <%     flash[:notice] = nil %>
+</div>
+<div class="row">
+  <table class="large-12 small-12 columns table table-hover">
+    <tbody>
+      <tr>
+        <th>Ranking</th>
+        <th>Name</th>
+        <th>Upvote</th>
+      </tr>
+      <% @all_items.each do |item| %>
+        <tr>
+          <td>Ranked: <%= item.rank %></td>
+          <td><%= link_to item.name, item_path(item.lower_kind, item.id) %></td>
+          <td><%= button_to "Upvote", upvote_item_path(item.lower_kind, item.id), { method: :patch } %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<section>
+  <div class="row">
+    <div class="large-12 small-12 columns">
+      <%= link_to "View All Media", root_path, { class: "btn btn-default" } %>
+      <%= link_to "Add a #{@media}", new_item_path(@media.downcase), { class: "btn btn-default" } %>
+    </div>
+  </div>
+</section>

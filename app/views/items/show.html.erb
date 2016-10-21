@@ -1,22 +1,38 @@
-<h1>
-  <%= @item.name %>
-  <small>
-    <%= @author_text %> by <%= @item.author %>
-  </small>
-</h1>
-<h4>
-  Ranked: <%= @item.rank %>
-</h4>
-<p class="flash-notice">
-  <%= flash[:notice] %>
-  <%     flash[:notice] = nil %>
+<div class="row">
+  <div class="large-6 small-12 columns">
+    <section>
+      <h1>
+        <%= @item.name %>
+        <small>
+          <%= @author_text %> by <%= @item.author %>
+        </small>
+      </h1>
+    </section>
+    <section>
+      <h4>
+        Ranked: <%= @item.rank %>
+      </h4>
+      <p class="flash-notice">
+        <%= flash[:notice] %>
+        <%     flash[:notice] = nil %>
+      </p>
+    </section>
+  </div>
+</div>
 
-</p>
-<%# raise %>
-<%= button_to "Upvote", upvote_item_path(@item.lower_kind, @item), {method: :patch}  %>
-<%= link_to "Edit #{@item.name}", edit_item_path(@item.lower_kind, @item), {class: "btn btn-default"} %>
-<%= link_to "Delete", item_path(@item.lower_kind, @item), {class: "btn btn-default red", method: "delete"} %>
-<%= link_to "View all #{ @item.kind.pluralize }", items_path(@item.lower_kind), {class: "btn btn-default"} %>
-<%= link_to "View all Media", root_path, {class: "btn btn-default"} %>
-
-<%# albums_upvote_path(item.id) %>
+<section>
+  <div class="row">
+    <div class="large-12 columns">
+        <%= button_to "Upvote", upvote_item_path(@item.lower_kind, @item), {method: :patch, class: "btn btn-primary"}  %>
+    </div>
+    <div class="large-2 small-12 columns">
+      <%= link_to "Edit #{@item.name}", edit_item_path(@item.lower_kind, @item), {class: "btn btn-default"} %>
+      <%= link_to "DELETE", item_path(@item.lower_kind, @item), {class: "btn btn-default red", method: "delete"} %>
+    </div>
+    <div class="large-3 small-12 end columns">
+      <%= link_to "View all #{ @item.kind.pluralize }", items_path(@item.lower_kind), {class: "btn btn-default"} %>
+      <%= link_to "View all Media", root_path, {class: "btn btn-default"} %>
+    </div>
+    </div>
+  </div>
+</section>

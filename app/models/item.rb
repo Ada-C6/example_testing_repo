@@ -6,9 +6,9 @@ class Item < ActiveRecord::Base
   validate :type_must_be_limited
 
   AUTHORS = {
-    "book"  => "Author",
-    "movie" => "Director",
-    "album" => "Artist"
+    "Book"  => "Author",
+    "Movie" => "Director",
+    "Album" => "Artist"
   }
 
   BOOK_MEDIA = "Book"

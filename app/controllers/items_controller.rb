@@ -1,6 +1,6 @@
 class ItemsController < ApplicationController
   def index
-    @media = current_media_type
+    @media = readable_media_type
     @all_items = Item.order(rank: :desc).where(kind: @media)
     # @media = Item::ALBUM_MEDIA
 
@@ -11,50 +11,50 @@ class ItemsController < ApplicationController
 
     if @item == nil # if the item does not exist
       flash[:notice] = EXIST_ERROR
-      redirect_to action: "index"
-    elsif @item.kind != current_media_type
-      flash[:notice] = type_error(current_media_type)
-      redirect_to action: "index"
+      redirect_to items_path(raw_media_type)
+    elsif @item.kind != readable_media_type
+      flash[:notice] = type_error(readable_media_type)
+      redirect_to items_path(raw_media_type)
     end
   end
 
   def new
     @item = Item.new
-    @author_text = Item::AUTHORS[current_media_type]
+    @author_text = Item::AUTHORS[readable_media_type]
   end
 
   def create
     @item = Item.new(post_params(params))
     @item.rank = 0
-    @item.kind = current_media_type
+    @item.kind = readable_media_type
     if @item.save
       # success
-      redirect_to items_path(current_media_type)
+      redirect_to items_path(raw_media_type)
     else
       render :new
     end
   end
 
   def edit
-    @item = Item.find_by(id: params[:id].to_i)
+    @item = Item.find_by(id: params[:id])
     if @item == nil # if the item does not exist
       flash[:notice] = EXIST_ERROR
-      redirect_to action: "index"
+      redirect_to items_path(raw_media_type)
     end
 
-    @author_text = Item::AUTHORS[current_media_type]
+    @author_text = Item::AUTHORS[readable_media_type]
   end
 
   def update
-    @item = Item.find_by(id: params[:id].to_i)
+    @item = Item.find_by(id: params[:id])
     if @item == nil # if the item does not exist
       redirect_to :index, flash: {notice: EXIST_ERROR }
     end
 
     if @item.update_attributes(post_params(params))
-      redirect_to item_path(current_media_type, @item.id), flash: {notice: "Item saved."}
+      redirect_to item_path(raw_media_type, @item.id), flash: {notice: "Item saved."}
     else
-      redirect_to edit_album_path(@item.id), flash: {notice: "Item could not be saved."}
+      redirect_to edit_item_path(raw_media_type, @item.id), flash: {notice: "Item could not be saved."}
     end
   end
 
@@ -89,8 +89,12 @@ class ItemsController < ApplicationController
 
   private
 
-  def current_media_type
-    @media ||= params[:media_type].capitalize.singularize
+  def readable_media_type
+    @readable_media ||= params[:media_type].capitalize.singularize
+  end
+
+  def raw_media_type
+    @media ||= params[:media_type].downcase.pluralize
   end
 
   def post_params(params)
