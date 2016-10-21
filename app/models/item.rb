@@ -5,13 +5,19 @@ class Item < ActiveRecord::Base
 
   validate :type_must_be_limited
 
+  AUTHORS = {
+    "book"  => "Author",
+    "movie" => "Director",
+    "album" => "Artist"
+  }
+
   BOOK_MEDIA = "Book"
   MOVIE_MEDIA = "Movie"
   ALBUM_MEDIA = "Album"
 
-  ALBUM_AUTHOR = "Artist"
-  BOOK_AUTHOR = "Author"
-  MOVIE_AUTHOR = "Director"
+  # ALBUM_AUTHOR = "Artist"
+  # BOOK_AUTHOR = "Author"
+  # MOVIE_AUTHOR = "Director"
 
   def type_must_be_limited
     if ![BOOK_MEDIA, MOVIE_MEDIA, ALBUM_MEDIA].include?(kind)
@@ -30,6 +36,6 @@ class Item < ActiveRecord::Base
   end
 
   def lower_kind
-    self.kind.downcase
+    self.kind.downcase.pluralize
   end
 end

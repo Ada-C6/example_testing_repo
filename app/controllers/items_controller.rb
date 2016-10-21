@@ -1,7 +1,9 @@
-class MoviesController < ApplicationController
+class ItemsController < ApplicationController
   def index
-    @all_items = Item.order(rank: :desc).where(kind: Item::MOVIE_MEDIA)
-    @media = Item::MOVIE_MEDIA
+    @media = current_media_type
+    @all_items = Item.order(rank: :desc).where(kind: @media)
+    # @media = Item::ALBUM_MEDIA
+
   end
 
   def show
@@ -10,24 +12,24 @@ class MoviesController < ApplicationController
     if @item == nil # if the item does not exist
       flash[:notice] = EXIST_ERROR
       redirect_to action: "index"
-    elsif @item.kind != Item::MOVIE_MEDIA
-      flash[:notice] = type_error(Item::MOVIE_MEDIA)
+    elsif @item.kind != current_media_type
+      flash[:notice] = type_error(current_media_type)
       redirect_to action: "index"
     end
   end
 
   def new
     @item = Item.new
-    @author_text = Item::MOVIE_AUTHOR
+    @author_text = Item::AUTHORS[current_media_type]
   end
 
   def create
     @item = Item.new(post_params(params))
     @item.rank = 0
-    @item.kind = Item::MOVIE_MEDIA
+    @item.kind = current_media_type
     if @item.save
       # success
-      redirect_to movies_path
+      redirect_to items_path(current_media_type)
     else
       render :new
     end
@@ -38,28 +40,21 @@ class MoviesController < ApplicationController
     if @item == nil # if the item does not exist
       flash[:notice] = EXIST_ERROR
       redirect_to action: "index"
-    elsif @item.kind != Item::MOVIE_MEDIA
-      flash[:notice] = type_error(Item::MOVIE_MEDIA)
-      redirect_to action: "index"
-    else
-      @author_text = Item::MOVIE_AUTHOR
     end
 
-
+    @author_text = Item::AUTHORS[current_media_type]
   end
 
   def update
     @item = Item.find_by(id: params[:id].to_i)
     if @item == nil # if the item does not exist
-      redirect_to :index, flash: {notice: EXIST_ERROR}
-    elsif @item.kind != Item::MOVIE_MEDIA
-      redirect_to :index, flash: { notice: type_error(Item::MOVIE_MEDIA) }
+      redirect_to :index, flash: {notice: EXIST_ERROR }
     end
 
     if @item.update_attributes(post_params(params))
-      redirect_to book_path(@item.id), flash: {notice: "Item saved."}
+      redirect_to item_path(current_media_type, @item.id), flash: {notice: "Item saved."}
     else
-      redirect_to edit_book_path(@item.id), flash: {notice: "Item could not be saved."}
+      redirect_to edit_album_path(@item.id), flash: {notice: "Item could not be saved."}
     end
   end
 
@@ -67,16 +62,13 @@ class MoviesController < ApplicationController
     @item = Item.find_by(id: params[:id].to_i)
     if @item == nil # if the item does not exist
       flash[:notice] = EXIST_ERROR
-      redirect_to :index
-    elsif @item.kind != Item::MOVIE_MEDIA
-      flash[:notice] = type_error(Item::MOVIE_MEDIA)
-      redirect_to :index
+      redirect_to action: "index"
     elsif @item.destroy
       flash[:notice] = DELETE_MSG
-      redirect_to :action=> :index, status: 303
+      redirect_to action: "index", status: 303
     else
       flash[:notice] = "Unable to delete the movie"
-      redirect_to :action=> :index, status: 303
+      redirect_to action: "index", status: 303
     end
   end
 
@@ -84,7 +76,7 @@ class MoviesController < ApplicationController
     @item = Item.find_by(id: params[:id].to_i)
     if @item == nil # if the item does not exist
       flash[:notice] = EXIST_ERROR
-      redirect_to :index
+      redirect_to action: "index"
     else
       @item.upvote
       if request.referer
@@ -96,7 +88,12 @@ class MoviesController < ApplicationController
   end
 
   private
-    def post_params(params)
-      params.require(:item).permit(:name, :author, :description)
-    end
+
+  def current_media_type
+    @media ||= params[:media_type].capitalize.singularize
+  end
+
+  def post_params(params)
+    params.require(:item).permit(:name, :author, :description)
+  end
 end

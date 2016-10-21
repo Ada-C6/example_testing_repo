@@ -30,6 +30,20 @@ album_sample:
   rank: 100
   kind: "Album"
 
+movie_sample:
+  name: "Sample Movie"
+  author: "Cools"
+  description: "Cool Movies"
+  rank: 5
+  kind: "Movie"
+
+book_sample:
+  name: "Sample Book"
+  author: "Ms. Cool"
+  description: "Cool Book"
+  rank: 55
+  kind: "Book"
+
 braveheart:
   name: "Braveheart"
   author: "Mel Gibson"
