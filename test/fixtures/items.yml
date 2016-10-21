@@ -5,11 +5,23 @@ minimal:
   rank: 0
   kind: "Book"
 
-missing_name:
+albums_missing_name:
   author: "Someone"
   description: MyText
   rank: 1
   kind: "Album"
+
+movies_missing_name:
+  author: "Someone"
+  description: MyText
+  rank: 1
+  kind: "Movie"
+
+books_missing_name:
+  author: "Someone"
+  description: MyText
+  rank: 1
+  kind: "Book"
 
 too_low_rank:
   author: "Too Low Rank"
@@ -23,21 +35,21 @@ invalid_kind:
   rank: -1
   kind: "TV Show"
 
-album_sample:
+albums_sample:
   name: "Sample Album"
   author: "Someone"
   description: "MyText"
   rank: 100
   kind: "Album"
 
-movie_sample:
+movies_sample:
   name: "Sample Movie"
   author: "Cools"
   description: "Cool Movies"
   rank: 5
   kind: "Movie"
 
-book_sample:
+books_sample:
   name: "Sample Book"
   author: "Ms. Cool"
   description: "Cool Book"

@@ -7,7 +7,7 @@ class ItemTest < ActiveSupport::TestCase
   end
 
   test "Items without name are not valid" do
-    assert_not items(:missing_name).valid?
+    assert_not items(:albums_missing_name).valid?
   end
 
   test "Items with less than 0 votes are invalid" do

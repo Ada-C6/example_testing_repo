@@ -2,13 +2,15 @@ require 'test_helper'
 
 class ItemsControllerTest < ActionController::TestCase
   [Item::BOOK_MEDIA, Item::ALBUM_MEDIA, Item::MOVIE_MEDIA].each do |media|
+    orig_media = media
+    media = media.downcase.pluralize
     test "should get index for #{ media }" do
       get :index, { media_type: media }
       assert_response :success
     end
 
     test "should get show for #{ media }" do
-      get :show, { id: items((media.downcase + "_sample").to_sym).id, media_type: media }
+      get :show, { id: items((media + "_sample").to_sym).id, media_type: media }
       assert_response :success
     end
 
@@ -19,7 +21,7 @@ class ItemsControllerTest < ActionController::TestCase
 
     test "Should have flash notice for showing things not in DB for #{ media }" do
       # 1st delete it so it's not in the DB
-      id = items(:album_sample).id
+      id = items((media + "_sample").to_sym).id
       delete :destroy, { id: id, media_type: media }
 
       # 2nd Then try to show the resource
@@ -45,11 +47,11 @@ class ItemsControllerTest < ActionController::TestCase
       assert_template :new
     end
 
-    test "Newly created #{ media }s should have the right fields and type" do
+    test "Newly created #{ media } should have the right fields and type" do
       post :create, {media_type: media, item: {name: "Californication", author: "Lucas", description: "Something"}}
 
       found_item = Item.find_by(name: "Californication")
-      sample_item = Item.new(name: "Californication", author: "Lucas", description: "Something", rank: 0, kind: media)
+      sample_item = Item.new(name: "Californication", author: "Lucas", description: "Something", rank: 0, kind: orig_media)
 
       assert found_item.equivalent? sample_item
     end
@@ -61,7 +63,7 @@ class ItemsControllerTest < ActionController::TestCase
     end
 
     test "should get edit for #{ media }" do
-      get :edit, { id: items(:missing_name).id, media_type: media }
+      get :edit, { id: items((media + "_missing_name").to_sym).id, media_type: media }
       assert_response :success
     end
 
@@ -72,24 +74,24 @@ class ItemsControllerTest < ActionController::TestCase
 
     test "Trying to edit a #{ media } item deleted or not there should be redirected" do
         # 1st delete the item
-      delete :destroy, { id: items(:album_sample).id, media_type: media }
+      delete :destroy, { id: items((media + "_sample").to_sym).id, media_type: media }
         # Try to edit the item that's not there.
-      get :edit, { id: items(:album_sample).id, media_type: media }
+      get :edit, { id: items((media + "_sample").to_sym).id, media_type: media }
       assert_response :redirect
       assert_equal ItemsController::EXIST_ERROR, flash[:notice]
     end
 
     test "An updated #{ media } should have the right fields" do
-      put :update, { id: items(:missing_name), item: {name: "Something new", author: "Bon Jovi", description: "Something goes here."}, media_type: media }
+      put :update, { id: items((media + "_missing_name").to_sym), item: {name: "Something new", author: "Bon Jovi", description: "Something goes here."}, media_type: media }
 
-      album = Item.find_by(name: "Something new")
-      sample_album = Item.new(name: "Something new", author: "Bon Jovi", description: "Something goes here.", rank: 1, kind: "Album")
+      item = Item.find_by(name: "Something new")
+      sample_item = Item.new(name: "Something new", author: "Bon Jovi", description: "Something goes here.", rank: 1, kind: orig_media)
 
-      assert album.equivalent? sample_album
+      assert item.equivalent? sample_item
     end
 
     test "Should be able to call destroy a #{ media }" do
-      delete :destroy, { id: items(:album_sample).id, media_type: media }
+      delete :destroy, { id: items((media + "_sample").to_sym).id, media_type: media }
       assert_response :redirect
     end
 
@@ -101,18 +103,18 @@ class ItemsControllerTest < ActionController::TestCase
 
     test "Deleting a(n) #{ media } should reduce the total number." do
       assert_difference 'Item.count', -1 do
-        delete :destroy, { id: items(:album_sample).id, media_type: media }
+        delete :destroy, { id: items((media + "_sample").to_sym).id, media_type: media }
       end
     end
 
     test "should be able to upvote a(n) #{ media }" do
-      patch :upvote, { id: items(:album_sample), media_type: media }
+      patch :upvote, { id: items((media + "_sample").to_sym), media_type: media }
       assert_response :redirect
     end
 
     test "Upvoting should increase the rank of a(n) #{ media }" do
-      assert_difference('Item.find(items(:album_sample).id).rank', 1) do
-        patch :upvote, { id: items(:album_sample), media_type: media }
+      assert_difference('Item.find(items((media + "_sample").to_sym).id).rank', 1) do
+        patch :upvote, { id: items((media + "_sample").to_sym), media_type: media }
         assert_response :redirect
       end
     end
